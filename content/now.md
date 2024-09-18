@@ -4,7 +4,7 @@ title = "Now"
 slug = "now"
 +++
 
-# Now
+# What is this?
 As inspired by Derek Sivers at https://sive.rs/now, this page is what is going on in my life right now. Updated September 17, 2024.
 
 ## Life
