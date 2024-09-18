@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  PucciThe.Dog - Python/Flask on an RPI · Luke Bearl
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Luke Bearl">
+<meta name="description" content="
+  Overview
+  
+    
+    Link to heading
+  
+
+Flask is an amazing little Python web micro-framework for those who aren&rsquo;t familiar with it. It allowed me to build out this entire application in about 8 hours of total dev time (including a whole bunch of time just not quite grokking flask-login). The minimal goals I wanted to achieve was to expose a very basic web presence for Pucci (the dog), along with building a very basic puppy cam. Since I had an old Raspberry Pi lying around, I figured that this might be the ideal project to use it for.">
+<meta name="keywords" content="blog,developer,personal,.net,c#,devops">
+<meta name="fediverse:creator" content="" />
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="PucciThe.Dog - Python/Flask on an RPI">
+  <meta name="twitter:description" content=" Overview Link to heading Flask is an amazing little Python web micro-framework for those who aren’t familiar with it. It allowed me to build out this entire application in about 8 hours of total dev time (including a whole bunch of time just not quite grokking flask-login). The minimal goals I wanted to achieve was to expose a very basic web presence for Pucci (the dog), along with building a very basic puppy cam. Since I had an old Raspberry Pi lying around, I figured that this might be the ideal project to use it for.">
+
+<meta property="og:url" content="http://localhost:1313/posts/puccithe-dog-pythonflask-on-an-rpi/">
+  <meta property="og:site_name" content="Luke Bearl">
+  <meta property="og:title" content="PucciThe.Dog - Python/Flask on an RPI">
+  <meta property="og:description" content=" Overview Link to heading Flask is an amazing little Python web micro-framework for those who aren’t familiar with it. It allowed me to build out this entire application in about 8 hours of total dev time (including a whole bunch of time just not quite grokking flask-login). The minimal goals I wanted to achieve was to expose a very basic web presence for Pucci (the dog), along with building a very basic puppy cam. Since I had an old Raspberry Pi lying around, I figured that this might be the ideal project to use it for.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2016-04-25T00:00:00+00:00">
+    <meta property="article:modified_time" content="2016-04-25T00:00:00+00:00">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/puccithe-dog-pythonflask-on-an-rpi/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      Luke Bearl
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/now/">Now</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://registry.jsonresume.org/lbearl?theme=professional">Resume</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/puccithe-dog-pythonflask-on-an-rpi/">
+              PucciThe.Dog - Python/Flask on an RPI
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2016-04-25T00:00:00Z">
+                April 25, 2016
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              5-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/software-development/">Software-Development</a></div>
+
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h2 id="overview">
+  Overview
+  <a class="heading-link" href="#overview">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Flask is an amazing little Python web micro-framework for those who aren&rsquo;t familiar with it. It allowed me to build out this entire application in about 8 hours of total dev time (including a whole bunch of time just not quite grokking flask-login). The minimal goals I wanted to achieve was to expose a very basic web presence for Pucci (the dog), along with building a very basic puppy cam. Since I had an old Raspberry Pi lying around, I figured that this might be the ideal project to use it for.</p>
+<p>Please feel free to take a look at the <a href="https://github.com/lbearl/puccithe.dog"  class="external-link" target="_blank" rel="noopener">code</a></p>
+<h2 id="bill-of-materials">
+  Bill of Materials
+  <a class="heading-link" href="#bill-of-materials">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ol>
+<li><a href="http://www.amazon.com/Raspberry-Pi-756-8308-Motherboard-RASPBRRYPCBA512/dp/B009SQQF9C"  class="external-link" target="_blank" rel="noopener">Raspberry Pi</a></li>
+<li><a href="http://www.amazon.com/Microsoft-LifeCam-NX-3000-Webcam-Gray/dp/B000TGAVSQ"  class="external-link" target="_blank" rel="noopener">Microsoft LifeCam NX-3000</a></li>
+<li><a href="http://www.amazon.com/Sweetbox-Raspberry-Pi-Case-Heatsinks/dp/B00IF9LIHC"  class="external-link" target="_blank" rel="noopener">Sweetbox Case</a> (optional)</li>
+</ol>
+<h2 id="the-plumbing">
+  The Plumbing
+  <a class="heading-link" href="#the-plumbing">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>In the interest of making this work as quickly as possible, the actual picture-taking logic is just a <a href="https://github.com/lbearl/puccithe.dog/blob/master/picturetaker.sh"  class="external-link" target="_blank" rel="noopener">shell script</a> running in cron (specifically once every 5 minutes). It likewise will examine all of the files in the directory and delete any that are more than a day old. The real magic is actually done by fswebcam as documented <a href="https://www.raspberrypi.org/documentation/usage/webcams/"  class="external-link" target="_blank" rel="noopener">here</a>.</p>
+<pre tabindex="0"><code>fswebcam -r 320x240 --jpeg 80 -D 3 -S 13 \ 
+/home/pi/poochpics/$DATE.jpg
+</code></pre><p>Technically the webcam should support higher resolution pictures, but I suspect that it isn&rsquo;t quite as compatible as I was led to believe it was. The <code>-D 3 -S 13</code> are very important for me as the camera was corrupting 70+% of the images that it was capturing. These arguments will first delay the capture for 3 seconds and then skip the first 13 frames captured, finally generating a photo based on the 14th frame captured. This numbers were very scientifically found by simply playing with the webcam until it was returning reliable results 100% of the time (it is possible that others will be able to operate the webcam without any delay or skipping any frames).</p>
+<p>Now that all of the photo generation and automatic purging of old images is handled the actual responsibilities for the web application are pretty slim: basically just a regular old mostly static web page with the ability to login to a secure area which will have the actual photos on display.</p>
+<p>I made the jump to almost 100% Windows at home (since I have been working on Windows machine for pretty much my entire career), and decided to use this project as an excuse to try out the Python Tools now available in Visual Studio (spoiler alert: they are awesome). I can&rsquo;t say that I have ever really used an IDE for Python development before (traditionally I&rsquo;ve done it in a mix of Vim and Sublime Text), so I can&rsquo;t compare it to some of the other Python IDEs out there, but as someone who gets paid to do C# in Visual Studio 2015, the experience was very nice.</p>
+<h2 id="implementing-the-web-application">
+  Implementing the Web Application
+  <a class="heading-link" href="#implementing-the-web-application">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>In order to actually get things working I just started with the default template that comes with VS for Flask + Jinja2 templating (I contemplated doing this project as an Angular app with a Flask RESTful backend, but decided against it). The code is pretty basic especially considering the entire application only consists of 4 routes and doesn&rsquo;t really do any magic (there isn&rsquo;t even a CRUD component to it). The one thing that isn&rsquo;t exactly standard was my choice for authentication. As I mentioned earlier, this application does use flask-login, and while my original thought was to just hardcode the credentials, I ended up not going down that path as I couldn&rsquo;t come up with a non-hacky way to persist the credentials that wasn&rsquo;t less complex than just adding a SQLite database with some credentials tossed into it. To that end if you look at <code>__init__.py</code> you&rsquo;ll notice the need to have a SQLite db called <code>test.db</code>. This database just has a single table called &ldquo;user&rdquo; which will store ids, usernames, emails, and bcrypt hashed passwords:</p>
+<h2 id="deployment">
+  Deployment
+  <a class="heading-link" href="#deployment">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>It really is an exciting time to be alive when I can build something on a Core i7 desktop with 32 GB of RAM, and then relatively effortlessly deploy it onto a computer the size of a microcontroller with a whopping 512MB of RAM and a sub-1Ghz ARM processor. The deployment is actually pretty standard: it&rsquo;s just Apache2 with mod_wsgi and the appropriate wiring as described <a href="http://flask.pocoo.org/docs/0.10/deploying/mod_wsgi/"  class="external-link" target="_blank" rel="noopener">here</a>. The most interesting part of all this is probably the way that DNS is being handled: Namecheap now offers Dynamic DNS, so I have ddclient running on the Pi, automatically updating my home IP address to Namecheap&rsquo;s DNS servers. If you want to try it out for yourself and give me a little boost in the wallet as well sign up <a href="https://www.namecheap.com/?aff=94946"  class="external-link" target="_blank" rel="noopener">here</a>.</p>
+<p>The only thing I&rsquo;m a little nervous about with this setup is whether or not the relatively underpowered RPi really is going to do that well connected to the public internet. That being said, it is pretty heavily firewalled, with only port 80 exposed so its a fairly limited attack surface for any of those internet hooligans.</p>
+<p>I hope you enjoyed reading about my very small flask application on a RPi, please reach out to me on <a href="https://twitter.com/lukebearl"  class="external-link" target="_blank" rel="noopener">Twitter @lukebearl</a> or head over to <a href="https://github.com/lbearl/puccithe.dog"  class="external-link" target="_blank" rel="noopener">Github</a>.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+    <section class="container">
+      ©
+      
+        2016 -
+      
+      2024
+       Luke Bearl 
+      · Made with <i class="fa-solid fa-heart"></i> in Minnesota
+      
+      
+    </section>
+  </footer>
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

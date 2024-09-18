@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  MS SQL Server Backups to S3 - On Linux! · Luke Bearl
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Luke Bearl">
+<meta name="description" content="Today I&rsquo;m going to go over what is necessary in order to do full and transaction log backups for SQL Server Express on Linux. One of the big limitations of SQL Express is that it doesn&rsquo;t include the SQL Agent, so most of the maintenance tasks that can normally be designed and implemented within SSMS need to be rethought. Thankfully Microsoft released sqlcmd for Linux, which makes it pretty easy to go ahead and do the backups as simple bash scripts scheduled through cron.">
+<meta name="keywords" content="blog,developer,personal,.net,c#,devops">
+<meta name="fediverse:creator" content="" />
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="MS SQL Server Backups to S3 - On Linux!">
+  <meta name="twitter:description" content="Today I’m going to go over what is necessary in order to do full and transaction log backups for SQL Server Express on Linux. One of the big limitations of SQL Express is that it doesn’t include the SQL Agent, so most of the maintenance tasks that can normally be designed and implemented within SSMS need to be rethought. Thankfully Microsoft released sqlcmd for Linux, which makes it pretty easy to go ahead and do the backups as simple bash scripts scheduled through cron.">
+
+<meta property="og:url" content="http://localhost:1313/posts/ms-sql-server-backups-to-s3-on-linux/">
+  <meta property="og:site_name" content="Luke Bearl">
+  <meta property="og:title" content="MS SQL Server Backups to S3 - On Linux!">
+  <meta property="og:description" content="Today I’m going to go over what is necessary in order to do full and transaction log backups for SQL Server Express on Linux. One of the big limitations of SQL Express is that it doesn’t include the SQL Agent, so most of the maintenance tasks that can normally be designed and implemented within SSMS need to be rethought. Thankfully Microsoft released sqlcmd for Linux, which makes it pretty easy to go ahead and do the backups as simple bash scripts scheduled through cron.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2017-12-06T00:00:00+00:00">
+    <meta property="article:modified_time" content="2017-12-06T00:00:00+00:00">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/ms-sql-server-backups-to-s3-on-linux/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      Luke Bearl
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/now/">Now</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://registry.jsonresume.org/lbearl?theme=professional">Resume</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/ms-sql-server-backups-to-s3-on-linux/">
+              MS SQL Server Backups to S3 - On Linux!
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2017-12-06T00:00:00Z">
+                December 6, 2017
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/dev-ops/">Dev-Ops</a>
+      <span class="separator">•</span>
+    <a href="/categories/system-administration/">System-Administration</a></div>
+
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>Today I&rsquo;m going to go over what is necessary in order to do full and transaction log backups for SQL Server Express on Linux. One of the big limitations of SQL Express is that it doesn&rsquo;t include the SQL Agent, so most of the maintenance tasks that can normally be designed and implemented within SSMS need to be rethought. Thankfully Microsoft released <code>sqlcmd</code> for Linux, which makes it pretty easy to go ahead and do the backups as simple bash scripts scheduled through cron.</p>
+<h2 id="prerequisites">
+  Prerequisites
+  <a class="heading-link" href="#prerequisites">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>This post isn&rsquo;t going to go through all of the steps to install SQL Server and the associated tools, but Microsoft has done a great job of documenting that on their docs site. In order to push the backups to S3 we will need the <code>s3cmd</code> tool:</p>
+<pre tabindex="0"><code>apt install s3cmd
+s3cmd --configure
+</code></pre><p>You&rsquo;ll need to have an IAM identity with at least enough permissions to write to the S3 bucket you designate in the script. In the configure prompts include the keys and specify what region you want to default to.</p>
+<h2 id="the-scripts">
+  The Scripts
+  <a class="heading-link" href="#the-scripts">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>In order to do the backups, two scripts are necessary: one for the full backups and one for the transaction log backups. I&rsquo;ve opted for a very simple structure since I only care about one database, it shouldn&rsquo;t be very hard to modify the script to generate backups for each database, but I&rsquo;ll leave that as an exercise for the reader :).</p>
+<h3 id="full-database-backups-fullbackupsh">
+  Full Database Backups (fullBackup.sh)
+  <a class="heading-link" href="#full-database-backups-fullbackupsh">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<pre tabindex="0"><code>TIMESTAMP=$(date +&#34;%F&#34;)
+BACKUP_DIR=&#34;/var/opt/mssql/backup/$TIMESTAMP&#34;
+SA_USER=&#34;SA&#34;
+SA_PASS=&#34;&lt;Your_SA_User_Password&gt;&#34;
+
+mkdir -p &#34;$BACKUP_DIR&#34;
+
+chown -R mssql:mssql $BACKUP_DIR
+
+sqlcmd -S localhost -Q &#34;BACKUP DATABASE [&lt;DBNAME&gt;] TO DISK = N&#39;$BACKUP_DIR/&lt;DBNAME&gt;.bak&#39; WITH NOFORMAT, NOINIT, SKIP, NOREWIND, STATS=10&#34; -U $SA_USER -P $SA_PASS
+
+s3cmd put &#34;$BACKUP_DIR/&lt;DBNAME&gt;.bak&#34; &#34;s3://&lt;BUCKET_NAME&gt;/$TIMESTAMP/&lt;DBNAME&gt;.bak&#34;
+rm -f &#34;$BACKUP_DIR/&lt;DBNAME&gt;.bak&#34;
+</code></pre><h3 id="transaction-log-backups-logbackupsh">
+  Transaction Log Backups (logBackup.sh)
+  <a class="heading-link" href="#transaction-log-backups-logbackupsh">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<pre tabindex="0"><code>DATESTAMP=$(date +&#34;%F&#34;)
+TIMESTAMP=$(date +&#34;%H%M%S&#34;)
+BACKUP_DIR=&#34;/var/opt/mssql/backup/$DATESTAMP/logs/$TIMESTAMP&#34;
+SA_USER=&#34;SA&#34;
+SA_PASS=&#34;&lt;Your_SA_User_Password&gt;&#34;
+
+mkdir -p &#34;$BACKUP_DIR&#34;
+
+chown -R mssql:mssql $BACKUP_DIR
+
+sqlcmd -S localhost -Q &#34;BACKUP LOG [&lt;DBNAME&gt;] TO DISK = N&#39;$BACKUP_DIR/&lt;DBNAME&gt;_log.bak&#39; WITH NOFORMAT, NOINIT, SKIP, NOREWIND, NOUNLOAD, STATS=5&#34; -U SA -P $SA_PASS
+
+s3cmd put &#34;$BACKUP_DIR/&lt;DBNAME&gt;_log.bak&#34; &#34;s3://&lt;BUCKET_NAME&gt;/$DATESTAMP/logs/$TIMESTAMP/&lt;DBNAME&gt;_log.bak&#34;
+
+rm -f &#34;$BACKUP_DIR/&lt;DBNAME&gt;_log.bak&#34;
+</code></pre><p>Then schedule them in cron:</p>
+<pre tabindex="0"><code>0 0 * * * /root/bin/fullBackup.sh
+*/15 * * * * /root/bin/logBackup.sh
+</code></pre><p>With the default schedule I have, full backups are taken at midnight and transaction log backups are taken every 15 minutes.</p>
+<h2 id="s3-lifecycles">
+  S3 Lifecycles
+  <a class="heading-link" href="#s3-lifecycles">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>While the scripts do a good job of cleaning up after themselves, S3 will (by design) never delete your data unless you specifically tell it to. S3 has a nifty feature called &ldquo;Lifecycles&rdquo; which allows us to specify rules for object retention (it is a powerful feature that can be used for a number of other things as well). To access it go to the AWS Console and enter into your S3 bucket. Follow these steps to setup object retention: 1. Select the Management Tab 2. Select Lifecycle 3. Click + Add lifecycle rule 4. Name the rule something descriptive (&ldquo;Expire all files&rdquo;). Leave the prefix blank 5. Leave Configure transition blank 6. In Expiration set the following options: <img src="images/aws-lifecycle-create.png" alt="S3 Lifecycle Creation"> 7. Click Save</p>
+<h2 id="thats-all">
+  That&rsquo;s All
+  <a class="heading-link" href="#thats-all">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>At this point we have full and transaction log backups configured, being pushed off site to Amazon S3. These backups are soft deleted after 7 days and fully deleted after 14 days.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+    <section class="container">
+      ©
+      
+        2016 -
+      
+      2024
+       Luke Bearl 
+      · Made with <i class="fa-solid fa-heart"></i> in Minnesota
+      
+      
+    </section>
+  </footer>
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

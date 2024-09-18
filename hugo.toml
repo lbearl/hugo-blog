@@ -1,0 +1,83 @@
+baseurl = "http://www.lukebearl.com"
+title = "Luke Bearl"
+theme = "hugo-coder"
+languagecode = "en"
+defaultcontentlanguage = "en"
+
+paginate = 20
+
+[services]
+[services.disqus]
+disqusShortname = "yourdiscussshortname"
+
+[markup.highlight]
+style = "github-dark"
+
+[params]
+  author = "Luke Bearl"
+  info = "Problem Solver, Code Craftsman, DevOps Expert"
+  description = "Luke Bearl's personal website"
+  keywords = "blog,developer,personal,.net,c#,devops"
+  #avatarurl = "images/luke.jpg"
+  gravatar = "lbearl@gmail.com"
+
+  faviconSVG = "/img/favicon.svg"
+  favicon_32 = "/img/favicon-32x32.png"
+  favicon_16 = "/img/favicon-16x16.png"
+
+  since = 2016
+
+  enableTwemoji = true
+
+  colorScheme = "auto"
+  hidecolorschemetoggle = false
+
+  # customCSS = ["css/custom.css"]
+  # customSCSS = ["scss/custom.scss"]
+  # customJS = ["js/custom.js"]
+
+[taxonomies]
+  category = "categories"
+  series = "series"
+  tag = "tags"
+  author = "authors"
+
+# Social links
+[[params.social]]
+  name = "Github"
+  icon = "fa-brands fa-github fa-2x"
+  weight = 1
+  url = "https://github.com/lbearl/"
+[[params.social]]
+  name = "Threads"
+  icon = "fa-brands fa-threads fa-2x"
+  weight = 2
+  url = "https://threads.net/@lukebearl/"
+[[params.social]]
+  name = "LinkedIn"
+  icon = "fa-brands fa-linkedin fa-2x"
+  weight = 3
+  url = "https://linkedin.com/in/lbearl/"
+[[params.social]]
+  name = "Twitter"
+  icon = "fa-brands fa-x-twitter fa-2x"
+  weight = 3
+  url = "https://x.com/lukebearl/"
+
+# Menu links
+[[menu.main]]
+  name = "Blog"
+  weight = 1
+  url  = "posts/"
+[[menu.main]]
+  name = "About"
+  weight = 3
+  url = "about/"
+[[menu.main]]
+  name = "Now"
+  weight = 2
+  url = "now/"
+[[menu.main]]
+  name = "Resume"
+  weight = 4
+  url = "https://registry.jsonresume.org/lbearl?theme=professional"

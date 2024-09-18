@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Public-Cloud on Luke Bearl</title>
+    <link>http://localhost:1313/categories/public-cloud/</link>
+    <description>Recent content in Public-Cloud on Luke Bearl</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 14 Feb 2020 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/public-cloud/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Duo Desire (a small IoT project)</title>
+      <link>http://localhost:1313/posts/duo-desire-a-small-iot-project/</link>
+      <pubDate>Fri, 14 Feb 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/duo-desire-a-small-iot-project/</guid>
+      <description>&lt;p&gt;My wife was watching Shark Tank a few weeks ago and we were both chatting about a thing we saw (&lt;a href=&#34;https://www.businessinsider.com/lovesync-shark-tank-sex-button-kickstarter-mark-cuban-barabara-corcoran-2020-1&#34;  class=&#34;external-link&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;which wasn&amp;rsquo;t funded&lt;/a&gt;). It was kind of a clever idea, and I&amp;rsquo;ll sidestep the entire discussion of whether or not it is a &amp;ldquo;good&amp;rdquo; product or not, I just wanted to see what it would take to build something kind of like it (this is loosely inspired by LoveSync, but the LoveSync does have some interesting features around time and also their hardware is &lt;em&gt;much&lt;/em&gt; prettier than what I&amp;rsquo;m using).&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Reducing Bandwidth Costs by Moving S3 Video to BackBlaze B2 with CloudFlare</title>
+      <link>http://localhost:1313/posts/reducing-bandwidth-costs-by-moving-s3-video-to-backblaze-b2-with-cloudflare/</link>
+      <pubDate>Fri, 02 Nov 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/reducing-bandwidth-costs-by-moving-s3-video-to-backblaze-b2-with-cloudflare/</guid>
+      <description>&lt;p&gt;I tweeted about the cost savings that I was able to achieve by moving some videos to S3. Unfortunately in my tweet I was off on the number&amp;rsquo;s a bit. Basically by switching costs went from $163.45 in September to $2.91 on Backblaze B2 in October (not quite as nice as I said in my tweet, only a 56x reduction in cost instead of a 100x reduction #oops).&lt;/p&gt;&#xA;&lt;p&gt;Regardless of my inability to recall the amounts of bills, I figured it would be good to quickly document how I have everything setup. The setup instructions I followed are basically the same as what&amp;rsquo;s documented by Backblaze &lt;a href=&#34;https://help.backblaze.com/hc/en-us/articles/217666928-Using-Backblaze-B2-with-the-Cloudflare-CDN&#34;  class=&#34;external-link&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;. For the purposes of this guide, I&amp;rsquo;ll assume you already have a CloudFlare account (they have free plans available if you don&amp;rsquo;t).&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>HOWTO: Migrating from a VPS to GCP Compute Engine</title>
+      <link>http://localhost:1313/posts/howto-migrating-from-a-vps-to-gcp-compute-engine/</link>
+      <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/howto-migrating-from-a-vps-to-gcp-compute-engine/</guid>
+      <description>&lt;p&gt;This post is going to be a brief guide on how to migrate a wordpress site from an existing host to Google Cloud&amp;rsquo;s Compute Engine service. Note that this guide assumes that multiple sites are being migrated, if only one is then that should make things slightly simpler.&lt;/p&gt;&#xA;&lt;p&gt;At the end of this guide the site will be migrated, an SSL certificate from &lt;a href=&#34;https://letsencrypt.org/&#34;  class=&#34;external-link&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Let&amp;rsquo;s Encrypt&lt;/a&gt; will be provisioned and Apache will be doing it&amp;rsquo;s thing. I&amp;rsquo;ll leave it as an exercise to the reader to put the site behind CloudFlare (hint: if you are already there the only thing you probably have to change is your A records). For my purposes this guide will also include migrating all images and attachments to Google Cloud Storage.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>VPS Migration to GCP</title>
+      <link>http://localhost:1313/posts/vps-migration-to-gcp/</link>
+      <pubDate>Tue, 04 Apr 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/vps-migration-to-gcp/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;ve had all of the blogs that I manage on several VPSs hosted through &lt;a href=&#34;https://clientarea.ramnode.com/aff.php?aff=2989&#34;  class=&#34;external-link&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;RamNode&lt;/a&gt; for the past couple of years. While there is nothing wrong with RamNode, I figured it was about time to try out something new. I originally was going to move to AWS, since their MySQL RDS offering looked pretty compelling, but then I discovered Google pretty much had feature parity with the parts of AWS I was interested in (plus they have a much nicer value proposition than AWS does for hosting costs).&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

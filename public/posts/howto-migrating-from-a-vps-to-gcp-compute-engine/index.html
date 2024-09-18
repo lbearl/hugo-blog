@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  HOWTO: Migrating from a VPS to GCP Compute Engine · Luke Bearl
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Luke Bearl">
+<meta name="description" content="This post is going to be a brief guide on how to migrate a wordpress site from an existing host to Google Cloud&rsquo;s Compute Engine service. Note that this guide assumes that multiple sites are being migrated, if only one is then that should make things slightly simpler.
+At the end of this guide the site will be migrated, an SSL certificate from Let&rsquo;s Encrypt will be provisioned and Apache will be doing it&rsquo;s thing. I&rsquo;ll leave it as an exercise to the reader to put the site behind CloudFlare (hint: if you are already there the only thing you probably have to change is your A records). For my purposes this guide will also include migrating all images and attachments to Google Cloud Storage.">
+<meta name="keywords" content="blog,developer,personal,.net,c#,devops">
+<meta name="fediverse:creator" content="" />
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="HOWTO: Migrating from a VPS to GCP Compute Engine">
+  <meta name="twitter:description" content="This post is going to be a brief guide on how to migrate a wordpress site from an existing host to Google Cloud’s Compute Engine service. Note that this guide assumes that multiple sites are being migrated, if only one is then that should make things slightly simpler.
+At the end of this guide the site will be migrated, an SSL certificate from Let’s Encrypt will be provisioned and Apache will be doing it’s thing. I’ll leave it as an exercise to the reader to put the site behind CloudFlare (hint: if you are already there the only thing you probably have to change is your A records). For my purposes this guide will also include migrating all images and attachments to Google Cloud Storage.">
+
+<meta property="og:url" content="http://localhost:1313/posts/howto-migrating-from-a-vps-to-gcp-compute-engine/">
+  <meta property="og:site_name" content="Luke Bearl">
+  <meta property="og:title" content="HOWTO: Migrating from a VPS to GCP Compute Engine">
+  <meta property="og:description" content="This post is going to be a brief guide on how to migrate a wordpress site from an existing host to Google Cloud’s Compute Engine service. Note that this guide assumes that multiple sites are being migrated, if only one is then that should make things slightly simpler.
+At the end of this guide the site will be migrated, an SSL certificate from Let’s Encrypt will be provisioned and Apache will be doing it’s thing. I’ll leave it as an exercise to the reader to put the site behind CloudFlare (hint: if you are already there the only thing you probably have to change is your A records). For my purposes this guide will also include migrating all images and attachments to Google Cloud Storage.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2017-04-13T00:00:00+00:00">
+    <meta property="article:modified_time" content="2017-04-13T00:00:00+00:00">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/howto-migrating-from-a-vps-to-gcp-compute-engine/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      Luke Bearl
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/now/">Now</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://registry.jsonresume.org/lbearl?theme=professional">Resume</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/howto-migrating-from-a-vps-to-gcp-compute-engine/">
+              HOWTO: Migrating from a VPS to GCP Compute Engine
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2017-04-13T00:00:00Z">
+                April 13, 2017
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              7-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/dev-ops/">Dev-Ops</a>
+      <span class="separator">•</span>
+    <a href="/categories/public-cloud/">Public-Cloud</a>
+      <span class="separator">•</span>
+    <a href="/categories/system-administration/">System-Administration</a></div>
+
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>This post is going to be a brief guide on how to migrate a wordpress site from an existing host to Google Cloud&rsquo;s Compute Engine service. Note that this guide assumes that multiple sites are being migrated, if only one is then that should make things slightly simpler.</p>
+<p>At the end of this guide the site will be migrated, an SSL certificate from <a href="https://letsencrypt.org/"  class="external-link" target="_blank" rel="noopener">Let&rsquo;s Encrypt</a> will be provisioned and Apache will be doing it&rsquo;s thing. I&rsquo;ll leave it as an exercise to the reader to put the site behind CloudFlare (hint: if you are already there the only thing you probably have to change is your A records). For my purposes this guide will also include migrating all images and attachments to Google Cloud Storage.</p>
+<h2 id="step-1-back-up-everything">
+  Step 1: Back up EVERYTHING
+  <a class="heading-link" href="#step-1-back-up-everything">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>In order to make this all work you are going to need backups of everything: the databases, the existing wordpress installs, any other assets you are using, etc. The easy way of doing this is to ssh to your web server and just <code>tar cvzf my_site.tgz /var/www/my_site</code> (this creates a tarball). Then use something like <code>sftp</code> or <code>scp</code> in order to copy the tarball to your local machine. Rinse and repeat for each site.</p>
+<p>Repeat this for the database server. Assuming you have 1 database per site (my preferred way of doing it) you can just <code>mysqldump -u root -p &lt;pw&gt; mydb &gt; mydb.sql</code>. If your database is huge it might be prudent to zip or otherwise compress the dump file (mine are only a few megabytes, so I didn&rsquo;t bother). Once you have the dump file, copy it to your local machine. Keep it up until you have all your databases.</p>
+<h2 id="step-2-make-the-cloud-a-thing">
+  Step 2: Make the Cloud a thing
+  <a class="heading-link" href="#step-2-make-the-cloud-a-thing">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Now that you have all of the goods on your local machine, it&rsquo;s time to make a place for them to live. To that end you&rsquo;ll want to provision a brand new VM on the Compute Engine. I&rsquo;m not going to walk you through that process as it is pretty well documented (and also just consists of pressing a few buttons. The one thing to watch out for is to make sure that the VM has <em>all</em> of the API Access Scopes that you will need as in order to change them you first have to power off the virtual machine (which is stupid and lots of people have complained about, but that is how it is). <img src="images/api-access-scopes.png" alt=""></p>
+<p>While that is booting up, let&rsquo;s get the MySQL stuff setup.</p>
+<p>If you&rsquo;re moving to Google Cloud, you might as well move in fully so for MySQL we&rsquo;ll use Google&rsquo;s SQL - MySQL Second Generation. The only real weird part here is to make sure you whitelist the IP address of the VM you setup. Alternatively you can go through a process to use the Google SQL Cloud Proxy, but IP whitelisting is a lot easier (and has fewer moving parts).</p>
+<h2 id="step-3-to-the-cloud">
+  Step 3: To the CLOUD
+  <a class="heading-link" href="#step-3-to-the-cloud">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>Now that your data has a place to live, it&rsquo;s time to start pushing those bytes to google. This is a 2 step process: 1. Upload the wordpress tarballs to the vm (assuming it has finished booting by now). The easiest way I&rsquo;ve found to do this is to install <a href="https://cloud.google.com/sdk/"  class="external-link" target="_blank" rel="noopener">gcloud</a> and then execute <code>gcloud compute copy-files ~/local/path &lt;vm_name&gt;:~/</code> replacing the chevrons and vm_name with the name of the instance you created (mine is web1 because I&rsquo;m all sorts of imaginative when it comes to naming servers). 2. Navigate to Google Cloud Storage and create a new bucket which is <em>not</em> publicly accessible. After the bucket is created upload all of the sql dumps (in an uncompressed form).</p>
+<h2 id="step-4-make-it-live">
+  Step 4: Make it Live!
+  <a class="heading-link" href="#step-4-make-it-live">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>All of the parts are in place, they just need to be configured properly and you&rsquo;ll have all your blogs running.</p>
+<h3 id="web-server">
+  Web Server
+  <a class="heading-link" href="#web-server">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Decompress the tarballs so that you have the wordpress directories again: <code>tar xvzf my_site.tgz</code>. Copy the resultant directory to wherever you want your blog to live (I just throw them in <code>/var/www/</code>). Next up you&rsquo;ll need to setup Apache to know about your site.</p>
+<p>Since we are only going to support SSL, we will only configure virtual hosts files for SSL. Your configuration should look something like this</p>
+<pre tabindex="0"><code>&lt;IfModule mod_ssl.c&gt;
+        &lt;VirtualHost _default_:443&gt;
+                ServerAdmin admin@example.org
+                ServerName lukebearl.com
+                ServerAlias www.lukebearl.com
+
+                DocumentRoot /path/to/lukebearl.com
+
+                &lt;Directory /&gt;
+                        Options FollowSymLinks
+                        AllowOverride None
+                &lt;/Directory&gt;
+
+                &lt;Directory /path/to/lukebearl.com&gt;
+                        Options Indexes FollowSymLinks MultiViews
+                        AllowOverride All
+                        Require all granted
+                &lt;/Directory&gt;
+
+                # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+                # error, crit, alert, emerg.
+                # It is also possible to configure the loglevel for particular
+                # modules, e.g.
+                #LogLevel info ssl:warn
+
+                ErrorLog ${APACHE_LOG_DIR}/error.log
+                CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+                # For most configuration files from conf-available/, which are
+                # enabled or disabled at a global level, it is possible to
+                # include a line for only one particular virtual host. For example the
+                # following line enables the CGI configuration for this host only
+                # after it has been globally disabled with &#34;a2disconf&#34;.
+                #Include conf-available/serve-cgi-bin.conf
+
+                #   SSL Engine Switch:
+                #   Enable/Disable SSL for this virtual host.
+                SSLEngine on
+
+                #   A self-signed (snakeoil) certificate can be created by installing
+                #   the ssl-cert package. See
+                #   /usr/share/doc/apache2/README.Debian.gz for more info.
+                #   If both key and certificate are stored in the same file, only the
+                #   SSLCertificateFile directive is needed.
+                SSLCertificateFile    /etc/letsencrypt/live/lukebearl.com/cert.pem
+                SSLCertificateKeyFile /etc/letsencrypt/live/lukebearl.com/privkey.pem
+                SSLCertificateChainFile /etc/letsencrypt/live/lukebearl.com/fullchain.pem
+
+                # ... &lt;snipsnip&gt; ...
+
+        &lt;/VirtualHost&gt;
+&lt;/IfModule&gt;
+</code></pre><p>Once you have that setup execute <code>sudo service apache2 reload</code> and then setup the Let&rsquo;s Encrypt certificate.</p>
+<p>In order to do that you&rsquo;ll first need to make sure that you have certbot installed. After that run this command: <code>sudo certbot certonly --webroot --webroot-path /var/www/html/ --renew-by-default --email youremail@example.org --text --agree-tos -d lukebearl.com -d www.lukebearl.com</code> The /var/www/html is still serving the default document on port 80 due to Apache&rsquo;s default site (which we never disabled).</p>
+<p>You&rsquo;ll also want to make sure that the renewal is scheduled in a crontab entry.</p>
+<p>At this point you should be able to navigate to your site (and get a database connection error).</p>
+<h3 id="sql">
+  SQL
+  <a class="heading-link" href="#sql">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>From my SQL control panel in console.cloud.google.com, click the &ldquo;import&rdquo; button and then in the dialog that appears find each of the dump files in turn. You&rsquo;ll also want to use the SQL Console in order to create a user with rights to all of those wordpress databases, but who isn&rsquo;t root. Make sure the password is decently strong.</p>
+<p>After you are done importing all of the databases, go back to the web server and the final configuration task before your site is live can be done.</p>
+<h3 id="editing-wp-configphp">
+  Editing wp-config.php
+  <a class="heading-link" href="#editing-wp-configphp">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p><code>cd</code> into the wordpress directory and then open the wp-config.php file in your text editor of choice (like vim). You&rsquo;ll need to look for and edit all of the DB_* settings to reflect your new MySQL instance. Pay attention to the DB_HOST as that should be the IPv4 address from the SQL management pane.</p>
+<h2 id="extra-credit-images">
+  Extra Credit: Images
+  <a class="heading-link" href="#extra-credit-images">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>If you run an image heavy blog (which this blog obviously is an example of), you&rsquo;ll notice a considerable speed-up if you make use of the <a href="https://wordpress.org/plugins/gcs/"  class="external-link" target="_blank" rel="noopener">Google Cloud Storage wordpress plugin</a>. One big gotcha that I <a href="https://github.com/GoogleCloudPlatform/wordpress-plugins/issues/42"  class="external-link" target="_blank" rel="noopener">found</a> is that php5-curl <em>must</em> be installed or this plugin breaks. A big thanks to the developers who work on that plugin as they quickly helped resolve the issue.</p>
+<p>Moving the images is a kind of 2 step process: 1. Create the bucket (and make sure to assign the allUsers user &ldquo;Read&rdquo; access before you upload anything) - You probably want to create the bucket as &ldquo;Multi-Regional&rdquo; so that images get cached to edge locations. - Also create a new folder in the bucket named &ldquo;1&rdquo;. 2. Copy all of the files from the wp-content/uploads directory to the bucket. When doing this I have found it easiest to <code>cd</code> into the <code>wp-content/uploads</code> directory and then execute the following: <code>gsutil -m cp -r . gs://&lt;bucket_name&gt;/1/</code> - This may take a few minutes to complete. The <code>-m</code> flag will make it multithreaded. 3. Login to the Wordpress Admin and install the plugin. - After installing, configure the plugin to point to the bucket you just copied everything into. Also make sure that the &ldquo;Use Secure URLs for serving&rdquo; flag is checked or you&rsquo;ll end up with mixed-content errors.</p>
+<p>At this point you should have your blog setup on Google Compute Engine using the Cloud MySQL instance and all of your images should be hosted through Google Storage. Let me know how it goes! <a href="http://www.twitter.com/lukebearl"  class="external-link" target="_blank" rel="noopener">@lukebearl</a></p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+    <section class="container">
+      ©
+      
+        2016 -
+      
+      2024
+       Luke Bearl 
+      · Made with <i class="fa-solid fa-heart"></i> in Minnesota
+      
+      
+    </section>
+  </footer>
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

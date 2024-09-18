@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Luke Bearl</title>
+    <link>http://localhost:1313/categories/</link>
+    <description>Recent content in Categories on Luke Bearl</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 16 Mar 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Software-Development</title>
+      <link>http://localhost:1313/categories/software-development/</link>
+      <pubDate>Wed, 16 Mar 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/software-development/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Iot</title>
+      <link>http://localhost:1313/categories/iot/</link>
+      <pubDate>Fri, 14 Feb 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/iot/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Public-Cloud</title>
+      <link>http://localhost:1313/categories/public-cloud/</link>
+      <pubDate>Fri, 14 Feb 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/public-cloud/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Dev-Ops</title>
+      <link>http://localhost:1313/categories/dev-ops/</link>
+      <pubDate>Fri, 02 Nov 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/dev-ops/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>System-Administration</title>
+      <link>http://localhost:1313/categories/system-administration/</link>
+      <pubDate>Fri, 02 Nov 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/system-administration/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>C</title>
+      <link>http://localhost:1313/categories/c/</link>
+      <pubDate>Wed, 31 Jan 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/c/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Python</title>
+      <link>http://localhost:1313/categories/python/</link>
+      <pubDate>Wed, 31 Jan 2018 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/python/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Personal-Development</title>
+      <link>http://localhost:1313/categories/personal-development/</link>
+      <pubDate>Sun, 07 May 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/personal-development/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Software-101</title>
+      <link>http://localhost:1313/categories/software-101/</link>
+      <pubDate>Wed, 12 Apr 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/software-101/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Source-Control</title>
+      <link>http://localhost:1313/categories/source-control/</link>
+      <pubDate>Wed, 12 Apr 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/source-control/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Net</title>
+      <link>http://localhost:1313/categories/net/</link>
+      <pubDate>Sun, 08 Jan 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/net/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Unit-Testing</title>
+      <link>http://localhost:1313/categories/unit-testing/</link>
+      <pubDate>Sun, 08 Jan 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/unit-testing/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Architecture</title>
+      <link>http://localhost:1313/categories/architecture/</link>
+      <pubDate>Wed, 19 Oct 2016 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/architecture/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

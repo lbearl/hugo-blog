@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  Reducing Bandwidth Costs by Moving S3 Video to BackBlaze B2 with CloudFlare · Luke Bearl
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Luke Bearl">
+<meta name="description" content="I tweeted about the cost savings that I was able to achieve by moving some videos to S3. Unfortunately in my tweet I was off on the number&rsquo;s a bit. Basically by switching costs went from $163.45 in September to $2.91 on Backblaze B2 in October (not quite as nice as I said in my tweet, only a 56x reduction in cost instead of a 100x reduction #oops).
+Regardless of my inability to recall the amounts of bills, I figured it would be good to quickly document how I have everything setup. The setup instructions I followed are basically the same as what&rsquo;s documented by Backblaze here. For the purposes of this guide, I&rsquo;ll assume you already have a CloudFlare account (they have free plans available if you don&rsquo;t).">
+<meta name="keywords" content="blog,developer,personal,.net,c#,devops">
+<meta name="fediverse:creator" content="" />
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Reducing Bandwidth Costs by Moving S3 Video to BackBlaze B2 with CloudFlare">
+  <meta name="twitter:description" content="I tweeted about the cost savings that I was able to achieve by moving some videos to S3. Unfortunately in my tweet I was off on the number’s a bit. Basically by switching costs went from $163.45 in September to $2.91 on Backblaze B2 in October (not quite as nice as I said in my tweet, only a 56x reduction in cost instead of a 100x reduction #oops).
+Regardless of my inability to recall the amounts of bills, I figured it would be good to quickly document how I have everything setup. The setup instructions I followed are basically the same as what’s documented by Backblaze here. For the purposes of this guide, I’ll assume you already have a CloudFlare account (they have free plans available if you don’t).">
+
+<meta property="og:url" content="http://localhost:1313/posts/reducing-bandwidth-costs-by-moving-s3-video-to-backblaze-b2-with-cloudflare/">
+  <meta property="og:site_name" content="Luke Bearl">
+  <meta property="og:title" content="Reducing Bandwidth Costs by Moving S3 Video to BackBlaze B2 with CloudFlare">
+  <meta property="og:description" content="I tweeted about the cost savings that I was able to achieve by moving some videos to S3. Unfortunately in my tweet I was off on the number’s a bit. Basically by switching costs went from $163.45 in September to $2.91 on Backblaze B2 in October (not quite as nice as I said in my tweet, only a 56x reduction in cost instead of a 100x reduction #oops).
+Regardless of my inability to recall the amounts of bills, I figured it would be good to quickly document how I have everything setup. The setup instructions I followed are basically the same as what’s documented by Backblaze here. For the purposes of this guide, I’ll assume you already have a CloudFlare account (they have free plans available if you don’t).">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2018-11-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2018-11-02T00:00:00+00:00">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/reducing-bandwidth-costs-by-moving-s3-video-to-backblaze-b2-with-cloudflare/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      Luke Bearl
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/now/">Now</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://registry.jsonresume.org/lbearl?theme=professional">Resume</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/reducing-bandwidth-costs-by-moving-s3-video-to-backblaze-b2-with-cloudflare/">
+              Reducing Bandwidth Costs by Moving S3 Video to BackBlaze B2 with CloudFlare
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2018-11-02T00:00:00Z">
+                November 2, 2018
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              2-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/dev-ops/">Dev-Ops</a>
+      <span class="separator">•</span>
+    <a href="/categories/public-cloud/">Public-Cloud</a>
+      <span class="separator">•</span>
+    <a href="/categories/system-administration/">System-Administration</a></div>
+
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>I tweeted about the cost savings that I was able to achieve by moving some videos to S3. Unfortunately in my tweet I was off on the number&rsquo;s a bit. Basically by switching costs went from $163.45 in September to $2.91 on Backblaze B2 in October (not quite as nice as I said in my tweet, only a 56x reduction in cost instead of a 100x reduction #oops).</p>
+<p>Regardless of my inability to recall the amounts of bills, I figured it would be good to quickly document how I have everything setup. The setup instructions I followed are basically the same as what&rsquo;s documented by Backblaze <a href="https://help.backblaze.com/hc/en-us/articles/217666928-Using-Backblaze-B2-with-the-Cloudflare-CDN"  class="external-link" target="_blank" rel="noopener">here</a>. For the purposes of this guide, I&rsquo;ll assume you already have a CloudFlare account (they have free plans available if you don&rsquo;t).</p>
+<ol>
+<li>Create the bucket in B2 ensuring that the bucket is marked as &ldquo;Public&rdquo;</li>
+<li>Upload the video to the B2 bucket</li>
+<li>Take note of the URL where the video (i.e. f002.backblazeb2.com)</li>
+<li>In CloudFlare create a CNAME (with the &ldquo;Orange Cloud&rdquo;) which points to the host name found in the URL of your uploaded video</li>
+<li>Access the video using your-new-cname.yourdomain.extension/file//</li>
+</ol>
+<p>As far as I can tell all files in your bucket will always resolve to the same hostname (the fxxx.backblazeb2.com identifier), so this is only necessary to configure once. Going forward just copy the public link from your Backblaze bucket and replace the backblazeb2.com part with your CNAME, and everything should be happy.</p>
+<p>Quick disclaimer: I wasn&rsquo;t compensated by CloudFlare or Backblaze for this, I&rsquo;m just sharing my experience. I make no guarantees about any results you&rsquo;ll see.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+    <section class="container">
+      ©
+      
+        2016 -
+      
+      2024
+       Luke Bearl 
+      · Made with <i class="fa-solid fa-heart"></i> in Minnesota
+      
+      
+    </section>
+  </footer>
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

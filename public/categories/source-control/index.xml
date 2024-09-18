@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Source-Control on Luke Bearl</title>
+    <link>http://localhost:1313/categories/source-control/</link>
+    <description>Recent content in Source-Control on Luke Bearl</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 12 Apr 2017 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/source-control/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Does it even exist if it isn&#39;t in source control?</title>
+      <link>http://localhost:1313/posts/does-it-even-exist-if-it-isnt-in-source-control/</link>
+      <pubDate>Wed, 12 Apr 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/does-it-even-exist-if-it-isnt-in-source-control/</guid>
+      <description>&lt;p&gt;I was working on a little side project at work to make my employer&amp;rsquo;s data backup processes a bit more robust which involved writing a small console utility. I was asked if the code for the utility was already in source control (this code represented about 10 hours of effort on my part), and I almost replied &amp;ldquo;Does it even exist if it isn&amp;rsquo;t in source control?&amp;rdquo; Instead, of course, I simply sent the link to the repo where the code lives.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

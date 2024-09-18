@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <title>
+  Migrating from G Suite Legacy Free to iCloud · Luke Bearl
+</title>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="Luke Bearl">
+<meta name="description" content="For those of us who are on Google&rsquo;s Legacy Free G Suite plan, there was an announcement the other day that all good things must come to an end. Sometime in the July timeframe everyone will need to either start paying or stop using the service. Fortuitously, Apple recently (in October) announced custom domain support for iCloud. For people who were using G Suite only as an email service (i.e. no Google Docs, or other Google Apps), and are only using it for personal accounts, iCloud can serve as a perfectly acceptable email host.">
+<meta name="keywords" content="blog,developer,personal,.net,c#,devops">
+<meta name="fediverse:creator" content="" />
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Migrating from G Suite Legacy Free to iCloud">
+  <meta name="twitter:description" content="For those of us who are on Google’s Legacy Free G Suite plan, there was an announcement the other day that all good things must come to an end. Sometime in the July timeframe everyone will need to either start paying or stop using the service. Fortuitously, Apple recently (in October) announced custom domain support for iCloud. For people who were using G Suite only as an email service (i.e. no Google Docs, or other Google Apps), and are only using it for personal accounts, iCloud can serve as a perfectly acceptable email host.">
+
+<meta property="og:url" content="http://localhost:1313/posts/migrating-from-g-suite-legacy-free-to-icloud/">
+  <meta property="og:site_name" content="Luke Bearl">
+  <meta property="og:title" content="Migrating from G Suite Legacy Free to iCloud">
+  <meta property="og:description" content="For those of us who are on Google’s Legacy Free G Suite plan, there was an announcement the other day that all good things must come to an end. Sometime in the July timeframe everyone will need to either start paying or stop using the service. Fortuitously, Apple recently (in October) announced custom domain support for iCloud. For people who were using G Suite only as an email service (i.e. no Google Docs, or other Google Apps), and are only using it for personal accounts, iCloud can serve as a perfectly acceptable email host.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-01-20T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-01-20T00:00:00+00:00">
+    <meta property="article:tag" content="Email">
+
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/migrating-from-g-suite-legacy-free-to-icloud/">
+
+
+<link rel="preload" href="/fonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.css" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.css" media="screen">
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg" sizes="any">
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    
+    <a class="navigation-title" href="http://localhost:1313/">
+      Luke Bearl
+    </a>
+    
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa-solid fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/now/">Now</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="/about/">About</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link " href="https://registry.jsonresume.org/lbearl?theme=professional">Resume</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://localhost:1313/posts/migrating-from-g-suite-legacy-free-to-icloud/">
+              Migrating from G Suite Legacy Free to iCloud
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa-solid fa-calendar" aria-hidden="true"></i>
+              <time datetime="2022-01-20T00:00:00Z">
+                January 20, 2022
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa-solid fa-clock" aria-hidden="true"></i>
+              2-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa-solid fa-folder" aria-hidden="true"></i>
+    <a href="/categories/software-development/">Software-Development</a></div>
+
+          <div class="tags">
+  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+    <span class="tag">
+      <a href="/tags/email/">Email</a>
+    </span></div>
+
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>For those of us who are on Google&rsquo;s Legacy Free G Suite plan, there was an announcement the other day that all good things must come to an end. Sometime in the July timeframe everyone will need to either start paying or stop using the service. Fortuitously, Apple recently (in October) announced custom domain support for iCloud. For people who were using G Suite only as an email service (i.e. no Google Docs, or other Google Apps), and are only using it for personal accounts, iCloud can serve as a perfectly acceptable email host.</p>
+<p>The migration path is pretty straight forward:</p>
+<ol>
+<li>Go to <a href="https://www.icloud.com/settings/customdomain"  class="external-link" target="_blank" rel="noopener">iCloud Settings</a> and click on the Manage button under Custom Email Domain
+<ol>
+<li>Click Add a domain you own</li>
+<li>Select if this is for a single person or for a family account (I believe this controls if the domain is made eligible for family sharing)</li>
+<li>Enter the domain</li>
+<li>When entering existing emails, only enter the ones that already exist</li>
+<li>Enter the DNS records (MX, SPF, DKIM, TXT, etc) that Apple provides into your DNS configuration</li>
+<li>Test sending an email</li>
+<li>If you have the legacy Gmail account and the new/updated iCloud account both in the Apple Mail app on a Mac, you can just copy and paste to migrate all old emails (I moved thousands of messages going all the way back to October 2010 in about 5 minutes with this process)</li>
+</ol>
+</li>
+</ol>
+<p>At this point my plan is to just let my old Google account exist, but I expect Google will make it inoperable on their announced timeline.</p>
+<h2 id="update-march-8-2022">
+  Update March 8, 2022
+  <a class="heading-link" href="#update-march-8-2022">
+    <i class="fa-solid fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>It looks like one thing that doesn&rsquo;t work all that well is sharing the account to children accounts. This reddit thread goes into detail: <a href="https://www.reddit.com/r/iCloud/comments/pttz4q/custom"  class="external-link" target="_blank" rel="noopener">https://www.reddit.com/r/iCloud/comments/pttz4q/custom</a>_domain_not_working_for_child_account/. Not a big deal for me right now, but hopefully something that will be addressed in the next couple of years.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+        
+        
+
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+    <section class="container">
+      ©
+      
+        2016 -
+      
+      2024
+       Luke Bearl 
+      · Made with <i class="fa-solid fa-heart"></i> in Minnesota
+      
+      
+    </section>
+  </footer>
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.js"></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>
