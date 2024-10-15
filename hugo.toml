@@ -36,6 +36,8 @@ style = "github-dark"
   # customCSS = ["css/custom.css"]
   # customSCSS = ["scss/custom.scss"]
   # customJS = ["js/custom.js"]
+[params.goatCounter]
+code = "lukebearl"
 
 [taxonomies]
   category = "categories"
