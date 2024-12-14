@@ -62,10 +62,10 @@ code = "lukebearl"
   weight = 3
   url = "https://linkedin.com/in/lbearl/"
 [[params.social]]
-  name = "Twitter"
-  icon = "fa-brands fa-x-twitter fa-2x"
+  name = "Bluesky"
+  icon = "fa-brands fa-bluesky fa-2x"
   weight = 3
-  url = "https://x.com/lukebearl/"
+  url = "https://bsky.app/profile/lukebearl.com"
 
 # Menu links
 [[menu.main]]
