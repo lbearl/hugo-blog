@@ -1,17 +1,69 @@
 +++
-date = "2024-09-17"
+date = "2026-04-26"
 title = "Now"
 slug = "now"
 +++
 
-# What is this?
-As inspired by Derek Sivers at https://sive.rs/now, this page is what is going on in my life right now. Updated September 17, 2024.
+## Now
 
-## Life
+*Last updated: April 2026*
 
-We went up to the boundary waters canoe area (BWCA) for the third year in a row this year over the Labor Day holiday weekend, and took Bailey with for the second year in a row. Gwen and I had a blast with that trip, although this time it was much more windy than we were expecting (we nearly swamped a canoe in whitecaps one day).
+### What I’m focused on
 
+Most of my time right now is focused on improving the reliability and maintainability of the systems I work on.
 
-## Work
+A lot of that comes down to:
+- making systems more resilient to failure
+- simplifying infrastructure and deployment workflows
+- reducing operational friction for teams over time
 
-I just celebrated 9 years at InVita (formerly Transplant Connect). The work remains challenging as my role continues to evolve as the business grows. The big push lately has been getting all of the Transplant infrastructure into IaC (using Terraform) and concurrently beefing up the security posture. With all of that going on (plus providing a bit of help on a few other things) things are staying very busy.
+Less about new tech, more about making things actually *work well* in practice.
+
+---
+
+### What I’m building
+
+- **Local Kubernetes setup (k3s)**  
+  Building out a local cluster as a foundation for hosting services and experimenting with infrastructure patterns.
+
+- **Personal tooling and workflows**  
+  Small tools and systems to make development faster, more repeatable, and less manual.
+
+- **This blog**  
+  Using writing as a way to think more clearly and document what I’m learning.
+
+---
+
+### What I’m exploring
+
+- **AI-assisted development**  
+  Especially around structured workflows, planning, and spec-driven approaches.
+
+- **Modern SDLC design**  
+  What development should look like for small teams if you fully lean into automation and AI.
+
+- **Infrastructure tradeoffs**  
+  Thinking through when different approaches (containers, orchestration, etc.) actually make sense.
+
+---
+
+### What I’m learning / thinking about
+
+- Simplicity scales better than complexity
+- Reliability is mostly about handling edge cases well
+- Good systems reduce the need for heroics
+- Most tooling is optimized for building, not operating
+
+---
+
+### Outside of work
+
+Spending more time outside when I can—hiking and getting away from screens.
+
+Also putting more energy into building things that are actually mine.
+
+---
+
+### This page
+
+This is a [now page](https://nownownow.com/about)—a snapshot of what I’m focused on, not a full history.
