@@ -4,8 +4,6 @@ title = "Now"
 slug = "now"
 +++
 
-## Now
-
 *Last updated: April 2026*
 
 ### What I’m focused on
