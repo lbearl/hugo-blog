@@ -14,6 +14,9 @@ disqusShortname = "yourdiscussshortname"
 [markup.highlight]
 style = "github-dark"
 
+[markup.goldmark.renderer]
+unsafe = true
+
 [params]
   author = "Luke Bearl"
   info = "Problem Solver, Code Craftsman, DevOps Expert"
